@@ -25,7 +25,7 @@ include_directories(${spdlog_SOURCE_DIR}/include)
 ##################################
 # boost
 ##################################
-find_package(Boost REQUIRED COMPONENTS thread system)
+find_package(Boost REQUIRED COMPONENTS thread system program_options)
 
 
 ##################################
@@ -54,7 +54,7 @@ include_directories(asio-calc ${Boost_INCLUDE_DIRS})
 link_directories(asio-calc ${Boost_LIBRARY_DIRS})
 target_link_libraries(asio-calc ${Boost_LIBRARIES})
 
-if (asio-calc-build_tests)
+if (ENABLE_TESTS)
     message("Testing enabled")
     enable_testing()
 

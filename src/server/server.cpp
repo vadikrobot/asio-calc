@@ -65,7 +65,6 @@ void Acceptor::onAccept(const boost::system::error_code &ec, std::shared_ptr<boo
 Server::Server(int portNum, boost::asio::io_service &io_service, std::function<std::string (std::istream &)> processRequest):
     mWork(boost::asio::io_service::work(io_service)),
     mAcceptor(io_service, portNum, processRequest) {
-    mLogger->set_level(spdlog::level::info);
 }
 
 void Server::Start() {
