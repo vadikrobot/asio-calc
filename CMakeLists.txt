@@ -23,14 +23,32 @@ set(Catch_INCLUDE_DIR vendor/Catch/include)
 set(spdlog_SOURCE_DIR vendor/spdlog)
 include_directories(${spdlog_SOURCE_DIR}/include)
 
+##################################
+# boost
+##################################
+find_package(Boost REQUIRED COMPONENTS thread system)
+
 
 ##################################
 include_directories(src)
 
-set(example_SOURCE src/example/example.hpp src/example/example.cpp)
+set(expression_evaluator_SOURCE
+    src/expression_evaluator/evaluator.hpp
+    src/expression_evaluator/evaluator.cpp
+    src/expression_generator/expression_generator.h
+    src/expression_generator/expression_generator.cpp
+    src/server/server.h
+    src/server/server.cpp
+    )
 
-add_library(example STATIC ${example_SOURCE})
-target_link_libraries(example ${CMAKE_THREAD_LIBS_INIT})
+add_library(expression_evaluator STATIC ${expression_evaluator_SOURCE})
+target_link_libraries(expression_evaluator ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(asio-calc src/main.cpp)
+target_link_libraries(asio-calc expression_evaluator)
+include_directories(asio-calc ${Boost_INCLUDE_DIRS})
+link_directories(asio-calc ${Boost_LIBRARY_DIRS})
+target_link_libraries(asio-calc ${Boost_LIBRARIES})
 
 if (example-build_tests)
     enable_testing()
