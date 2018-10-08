@@ -19,7 +19,7 @@ std::string Evaluator<InputInteger, ResultType>::Run() {
         output << std::setprecision(std::numeric_limits<ResultType>::max_digits10)
                << handleAddition();
         if (it != input.end()) {
-            return "wrong input";
+            return "Error wrong input";
         }
         return output.str();
     } catch (const std::exception& e) {
@@ -38,7 +38,7 @@ ResultType Evaluator<InputInteger, ResultType>::handleMultiplication() {
         } else if (tok.operation == '/') {
             ResultType denom = prim();
             if (denom == 0) {
-                throw std::overflow_error("divide by zero");
+                throw std::overflow_error("Error division by zero");
             }
             left/= denom;
         } else {
@@ -143,6 +143,8 @@ Evaluator<InputInteger, ResultType>::Evaluator(std::string &&input_) :
 }
 template class Evaluator<int, long double>;
 template class Evaluator<int, boost::multiprecision::cpp_dec_float_100>;
+template class Evaluator<int, long long>;
+template class Evaluator<int, int>;
 }
 
 

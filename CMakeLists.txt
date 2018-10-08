@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
-project(example)
+project(asio-calc)
 
-# Change all `example` to your project name!
-set(example-build_tests OFF CACHE BOOL "Whether to build tests")
+set(asio-calc-build_tests OFF CACHE BOOL "Whether to build tests")
 
 # Enable C++14
 set (CMAKE_CXX_STANDARD 14)
@@ -37,26 +36,32 @@ set(expression_evaluator_SOURCE
     src/expression_evaluator/evaluator.cpp
     src/expression_generator/expression_generator.h
     src/expression_generator/expression_generator.cpp
+    )
+
+set(server_SOURCE
     src/server/server.h
     src/server/server.cpp
     )
 
 add_library(expression_evaluator STATIC ${expression_evaluator_SOURCE})
-target_link_libraries(expression_evaluator ${CMAKE_THREAD_LIBS_INIT})
+
+add_library(server STATIC ${server_SOURCE})
+target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(asio-calc src/main.cpp)
-target_link_libraries(asio-calc expression_evaluator)
+target_link_libraries(asio-calc expression_evaluator server)
 include_directories(asio-calc ${Boost_INCLUDE_DIRS})
 link_directories(asio-calc ${Boost_LIBRARY_DIRS})
 target_link_libraries(asio-calc ${Boost_LIBRARIES})
 
-if (example-build_tests)
+if (asio-calc-build_tests)
+    message("Testing enabled")
     enable_testing()
 
-    add_executable(example-test test/example_test.cpp test/test_main.cpp)
-    target_include_directories(example-test PUBLIC ${Catch_INCLUDE_DIR})
-    target_link_libraries(example-test example)
+    add_executable(asio-calc-test test/example_test.cpp test/test_main.cpp)
+    target_include_directories(asio-calc-test PUBLIC ${Catch_INCLUDE_DIR})
+    target_link_libraries(asio-calc-test expression_evaluator)
+    target_link_libraries(asio-calc-test ${CMAKE_THREAD_LIBS_INIT})
 
-
-    add_test(example_test example-test)
+    add_test(expression_evaluator asio-calc-test)
 endif()

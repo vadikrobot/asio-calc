@@ -4,8 +4,6 @@
 
 namespace AsioCalc {
 namespace ExpressionGenerator {
-std::string genNextToken() {}
-
 std::string generate(int lenInSymbol) {
     enum SymbolType {
         operaion,
