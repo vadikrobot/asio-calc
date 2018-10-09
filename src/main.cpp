@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
         boost::program_options::notify(vm);
     } catch (...) {
-        logger->error("Error occured! Unknow arguments");
+        logger->error("Error occured! Unknown arguments");
     }
 
     if (vm.count("p")) {
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
         boost::asio::io_service ios_service;
         AsioCalc::Server srv(portNum, ios_service, ProcessRequest);
         std::vector<std::thread> runners;
-        for (int i = 0; i < std::thread::hardware_concurrency(); i++) {
+        for (size_t i = 0; i < std::thread::hardware_concurrency(); i++) {
             runners.emplace_back([&]{ios_service.run();});
         }
         srv.Start();

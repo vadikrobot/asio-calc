@@ -74,6 +74,6 @@ void Server::Start() {
 
 void Server::Stop() {
     mAcceptor.stop();
-    mLogger->info("Server stoped");
+    mLogger->info("Server stopped");
 }
 }
