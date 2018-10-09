@@ -34,8 +34,6 @@ include_directories(src)
 set(expression_evaluator_SOURCE
     src/expression_evaluator/evaluator.hpp
     src/expression_evaluator/evaluator.cpp
-    src/expression_generator/expression_generator.h
-    src/expression_generator/expression_generator.cpp
     )
 
 set(server_SOURCE

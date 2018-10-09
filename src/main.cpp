@@ -1,6 +1,5 @@
 #include <spdlog/spdlog.h>
 #include <expression_evaluator/evaluator.hpp>
-#include <expression_generator/expression_generator.h>
 #include <boost/program_options.hpp>
 #include <boost/program_options/options_description.hpp>
 

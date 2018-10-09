@@ -1,10 +1,10 @@
 #ifndef EXPRESSION_GENERATOR_H
 #define EXPRESSION_GENERATOR_H
-#include <string>
+#include <sstream>
 
 namespace AsioCalc {
 namespace ExpressionGenerator {
-std::string generate(int lenInSymbol);
+void generate(int lenInSymbol, std::stringstream &ss);
 }
 }
 

@@ -4,7 +4,7 @@
 
 namespace AsioCalc {
 namespace ExpressionGenerator {
-std::string generate(int lenInSymbol) {
+void generate(int lenInSymbol, std::stringstream &ss) {
     enum SymbolType {
         operaion,
         number,
@@ -17,6 +17,7 @@ std::string generate(int lenInSymbol) {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> symbolGen(0, SymbolType::End - 1);
     std::uniform_int_distribution<> operationGen(0, 3);
+    std::uniform_int_distribution<> spacesGen(0, 10);
     std::uniform_int_distribution<> numberGen(1, std::numeric_limits<int>::max());
 
     int openCloseCounter{0};
@@ -65,21 +66,17 @@ std::string generate(int lenInSymbol) {
         }
     };
 
-    std::string res;
     for (int i = 0; i < lenInSymbol; i++) {
-        res+= genNextToken();
+        ss << genNextToken() << std::string(spacesGen(gen), ' ');
         firstSymbol = false;
     }
 
     if (symbolType == SymbolType::operaion) {
-        res+= std::to_string(numberGen(gen));
+        ss << std::to_string(numberGen(gen));
     }
     while (openCloseCounter--) {
-        res.push_back(')');
+        ss << ")";
     }
-
-
-    return res;
 }
 }
 }
