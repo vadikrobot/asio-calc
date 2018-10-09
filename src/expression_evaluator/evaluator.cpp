@@ -146,6 +146,3 @@ template class Evaluator<int, boost::multiprecision::cpp_dec_float_100>;
 template class Evaluator<int, long long>;
 template class Evaluator<int, int>;
 }
-
-
-
