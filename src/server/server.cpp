@@ -41,14 +41,14 @@ void Acceptor::onAccept(const boost::system::error_code &ec, std::shared_ptr<boo
             std::istream buffer(&*request);
             auto response = mProcessRequest(buffer);
             boost::asio::async_write(*sock.get(),
-                                     boost::asio::buffer(response),
-                                     [this](const boost::system::error_code& ec, std::size_t bytes_transferred) {
+                                     boost::asio::buffer(response.c_str(), response.size()),
+                                     [this, sock](const boost::system::error_code& ec, std::size_t bytes_transferred) {
                 if (ec != 0) {
-                    logger->error("Error occured! Error code = {}. Message {}", ec.value(), ec.message());
+                    logger->error("Error occured during write! Error code = {}. Message {}", ec.value(), ec.message());
                 }
                 logger->debug("writing is completed");
             }); };
-        boost::asio::async_read_until(*sock.get(), *request, '\n', callBack);
+        boost::asio::async_read_until(*sock.get(), *request, '\0', callBack);
     } else {
         logger->error("Error occured! Error code = {}. Message {}", ec.value(), ec.message());
     }
