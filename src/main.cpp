@@ -6,17 +6,18 @@
 #include <server/server.h>
 
 std::string ProcessRequest(std::istream &request) {
-    std::string str, response;
+    std::string str;
+    std::stringstream response;
     bool first{true};
     while(std::getline(request, str)) {
         if (!first) {
-            response+="\n";
+            response << "\n";
         }
         first = false;
         AsioCalc::Evaluator<int, boost::multiprecision::cpp_dec_float_100> evaluator(std::move(str));
-        response+= evaluator.Run();
+        response << evaluator.Run();
     }
-    return response;
+    return response.str();
 }
 
 int main(int argc, char **argv) {
