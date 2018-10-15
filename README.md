@@ -14,7 +14,7 @@ Arithmetic expression may constist of \+, \-, \*, \/, \(, \) and integer numbers
 
 1. Download this project: `git clone --recursive https://github.com/vadikrobot/asio-calc.git`
 2. `cd asio-calc`
-3. `mkdir build.release`
+3. `mkdir build.release && cd build.release`
 4. `cmake -DCMAKE_BUILD_TYPE=Release ..`
 5. `make -j4`
 6. to run server: `./asio-calc -p 8080`
@@ -24,7 +24,7 @@ Arithmetic expression may constist of \+, \-, \*, \/, \(, \) and integer numbers
 # To run tests
 1. Download this project: `git clone --recursive https://github.com/vadikrobot/asio-calc.git`
 2. `cd asio-calc`
-3. `mkdir build.debug`
+3. `mkdir build.debug && cd build.debug`
 4. `cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=True ..`
 5. `make -j4`
 6. `ctest` or `./asio-calc-test`
@@ -33,7 +33,7 @@ Arithmetic expression may constist of \+, \-, \*, \/, \(, \) and integer numbers
 # Make random expression
 1. run server
 2. in separate console `cd asio-calc/expression_generator`
-3. `mkdir build`
+3. `mkdir build && cd build`
 4. `cmake -DCMAKE_BUILD_TYPE=Release ..`
 5. `make -j4`
 6. `./expression-generator 100 100000 > /tmp/expr`
