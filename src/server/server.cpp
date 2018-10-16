@@ -32,23 +32,11 @@ void Acceptor::initAccept() {
     mAcceptor.async_accept(*sock.get(), callBack);
 }
 
-void Acceptor::onAccept(const boost::system::error_code &ec, std::shared_ptr<boost::asio::ip::tcp::socket> sock)
-{
-    logger->debug("new request");
-    if (ec == 0) {
-        auto request = std::make_shared<boost::asio::streambuf>();
-        auto callBack = [this, request, sock] (const boost::system::error_code& ec, std::size_t bytes_transferred) {
-            std::istream buffer(&*request);
-            auto response = mProcessRequest(buffer);
-            boost::asio::async_write(*sock.get(),
-                                     boost::asio::buffer(response.c_str(), response.size()),
-                                     [this, sock](const boost::system::error_code& ec, std::size_t bytes_transferred) {
-                if (ec != 0) {
-                    logger->error("Error occured during write! Error code = {}. Message {}", ec.value(), ec.message());
-                }
-                logger->debug("writing is completed");
-            }); };
-        boost::asio::async_read_until(*sock.get(), *request, '\0', callBack);
+void Acceptor::onAccept(const boost::system::error_code &ec, std::shared_ptr<boost::asio::ip::tcp::socket> sock) {
+    logger->info("New connection");
+    auto request = std::make_shared<boost::asio::streambuf>();
+    if (ec.value() == 0) {
+        doRead(sock, request);
     } else {
         logger->error("Error occured! Error code = {}. Message {}", ec.value(), ec.message());
     }
@@ -60,6 +48,33 @@ void Acceptor::onAccept(const boost::system::error_code &ec, std::shared_ptr<boo
         // Stop accepting incoming connections
         mAcceptor.close();
     }
+}
+
+void Acceptor::doRead(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::shared_ptr<boost::asio::streambuf> request) {
+    logger->info("New read");
+    auto callBack = [this, request, sock] (const boost::system::error_code& ec, std::size_t bytes_transferred) {
+        if (ec.value() != 0) {
+            if (ec == boost::asio::error::eof) {
+                logger->info("Close connection");
+                return;
+            }
+            logger->error("Error occured during reading! Error code = {}. Message {}", ec.value(), ec.message());
+            return;
+        }
+        std::istream buffer(&*request);
+        auto response = mProcessRequest(buffer);
+        logger->debug("response: {}", response);
+        boost::asio::async_write(*sock.get(),
+                                 boost::asio::buffer(response.c_str(), response.size()),
+                                 [this, sock](const boost::system::error_code& ec, std::size_t bytes_transferred) {
+            if (ec.value() != 0) {
+                logger->error("Error occured during write! Error code = {}. Message {}", ec.value(), ec.message());
+            }
+            logger->debug("writing is completed");
+        });
+        this->doRead(sock, request);
+    };
+    boost::asio::async_read_until(*sock.get(), *request, '\n', callBack);
 }
 
 Server::Server(int portNum, boost::asio::io_service &io_service, std::function<std::string (std::istream &)> processRequest):

@@ -6,18 +6,11 @@
 #include <server/server.h>
 
 std::string ProcessRequest(std::istream &request) {
+    auto logger = spdlog::get("server");
     std::string str;
-    std::stringstream response;
-    bool first{true};
-    while(std::getline(request, str)) {
-        if (!first) {
-            response << "\n";
-        }
-        first = false;
-        AsioCalc::Evaluator<int, boost::multiprecision::cpp_dec_float_100> evaluator(std::move(str));
-        response << evaluator.Run();
-    }
-    return response.str();
+    std::getline(request, str);
+    AsioCalc::Evaluator<int, boost::multiprecision::cpp_dec_float_100> evaluator(std::move(str));
+    return evaluator.Run() + "\n";
 }
 
 int main(int argc, char **argv) {

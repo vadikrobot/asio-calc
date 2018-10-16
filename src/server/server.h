@@ -18,6 +18,7 @@ private:
     void initAccept();
     void onAccept(const boost::system::error_code &ec,
                   std::shared_ptr<boost::asio::ip::tcp::socket> sock);
+    void doRead(std::shared_ptr<boost::asio::ip::tcp::socket> sock, std::shared_ptr<boost::asio::streambuf> request);
 private:
     boost::asio::io_service& mIoService;
     boost::asio::ip::tcp::acceptor mAcceptor;
