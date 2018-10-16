@@ -37,9 +37,10 @@ int main(int argc, char **argv) {
         logger->error("Error occured! Unknown arguments");
     }
 
-    if (vm.count("p")) {
-        portNum = vm["p"].as<int>();
+    if (vm.count("port")) {
+        portNum = vm["port"].as<int>();
     }
+    logger->info("port {}", portNum);
 
     if (vm.count("log_level")) {
         if (vm["log_level"].as<std::string>() == "debug") {
