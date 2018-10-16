@@ -1,5 +1,5 @@
 #include <memory>
-#include <bitset>
+#include <unordered_set>
 #include <limits>
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
@@ -47,7 +47,7 @@ class Evaluator {
         }
     };
     Token lastToken{Token::FinalToken()};
-    std::bitset<std::numeric_limits<unsigned char>::max()> mask;
+    std::unordered_set<char> mask;
 public:
     std::string input;
     std::string::iterator it;

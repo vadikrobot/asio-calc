@@ -99,7 +99,7 @@ typename Evaluator<InputInteger, ResultType>::Token Evaluator<InputInteger, Resu
     prev = it;
     while (it != input.end()) {
         symbol = *it;
-        if (symbol == ' ') {
+        if (std::isspace(*it)) {
             ++it;
             continue;
         }
@@ -114,7 +114,7 @@ typename Evaluator<InputInteger, ResultType>::Token Evaluator<InputInteger, Resu
     logger->debug("parsed '{}', '{}'", num, symbol);
     if (!num.empty()) {
         return Token::BuildFromInteger(ParseInteger<InputInteger>(num));
-    } else if (mask[symbol]) {
+    } else if (mask.count(symbol)) {
         ++it;
         return Token::BuildFromOperation(symbol);
     } else if (it != input.end()) {
@@ -138,7 +138,7 @@ Evaluator<InputInteger, ResultType>::Evaluator(std::string &&input_) :
     }
 
     for (char i : {'(', ')', '/', '*', '+', '-'}) {
-        mask.set(i);
+        mask.insert(i);
     }
 }
 template class Evaluator<int, long double>;
