@@ -13,13 +13,9 @@ int main (int argc, char **argv) {
     int num = std::atoi(argv[2]);
 
     std::stringstream ss;
-    bool first{true};
     for (int i = 0; i < num; i++) {
-        if (!first) {
-            ss << "\n";
-        }
-        first = false;
         AsioCalc::ExpressionGenerator::generate(len, ss);
+        ss << "\n";
     }
 
     std::cout << ss.rdbuf();

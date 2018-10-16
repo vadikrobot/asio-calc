@@ -24,6 +24,7 @@ void generate(int lenInSymbol, std::stringstream &ss) {
     int symbolType = SymbolType::End;
     bool firstSymbol = true;
 
+    bool symbolSet{false};
     std::function<std::string()> genNextToken = [&] {
         while(true) {
             auto nextSymbol = symbolGen(gen);
@@ -43,7 +44,7 @@ void generate(int lenInSymbol, std::stringstream &ss) {
                     return genNextToken();
                 }
                 symbolType = nextSymbol;
-
+                symbolSet = true;
                 return std::to_string(numberGen(gen));
             }
             if (nextSymbol == SymbolType::opened_bracket) {
@@ -66,9 +67,11 @@ void generate(int lenInSymbol, std::stringstream &ss) {
         }
     };
 
-    for (int i = 0; i < lenInSymbol; i++) {
-        ss << genNextToken() << std::string(spacesGen(gen), ' ');
-        firstSymbol = false;
+    while(!symbolSet) {
+        for (int i = 0; i < lenInSymbol; i++) {
+            ss << genNextToken() << std::string(spacesGen(gen), ' ');
+            firstSymbol = false;
+        }
     }
 
     if (symbolType == SymbolType::operaion) {
